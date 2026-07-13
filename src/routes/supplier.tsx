@@ -9,12 +9,12 @@ export const Route = createFileRoute("/supplier")({
   component: SupplierLayout,
 });
 
-const items = [
+const items: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/supplier", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/supplier/herbs", label: "My Herbs", icon: Leaf },
   { to: "/supplier/bookings", label: "Bookings", icon: CalendarCheck },
   { to: "/supplier/profile", label: "Profile", icon: User },
-] as const;
+];
 
 function SupplierLayout() {
   const nav = useNavigate();
@@ -37,7 +37,7 @@ function SupplierLayout() {
           {items.map((i) => {
             const active = i.exact ? pathname === i.to : pathname.startsWith(i.to);
             return (
-              <Link key={i.to} to={i.to} className={cn("flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium",
+              <Link key={i.to} to={i.to as "/supplier"} className={cn("flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium",
                 active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground")}>
                 <i.icon className="h-4 w-4" /> {i.label}
               </Link>
@@ -56,7 +56,7 @@ function SupplierLayout() {
           </div>
           <nav className="flex gap-1 md:hidden">
             {items.map((i) => (
-              <Link key={i.to} to={i.to} className="rounded-full p-2 hover:bg-secondary"><i.icon className="h-4 w-4" /></Link>
+              <Link key={i.to} to={i.to as "/supplier"} className="rounded-full p-2 hover:bg-secondary"><i.icon className="h-4 w-4" /></Link>
             ))}
           </nav>
         </header>
