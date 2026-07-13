@@ -67,13 +67,13 @@ function HerbDetail() {
         <div className="rounded-3xl border bg-card p-6">
           <h3 className="font-display text-xl font-semibold">Benefits</h3>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            {herb.benefits.map((b) => <li key={b} className="flex gap-2"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" /> {b}</li>)}
+            {herb.benefits.map((b: string) => <li key={b} className="flex gap-2"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" /> {b}</li>)}
           </ul>
         </div>
         <div className="rounded-3xl border bg-card p-6">
           <h3 className="font-display text-xl font-semibold">Cooking uses</h3>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            {herb.cooking.map((b) => <li key={b} className="flex gap-2"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" /> {b}</li>)}
+            {herb.cooking.map((b: string) => <li key={b} className="flex gap-2"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" /> {b}</li>)}
           </ul>
         </div>
         <div className="rounded-3xl border bg-card p-6">
