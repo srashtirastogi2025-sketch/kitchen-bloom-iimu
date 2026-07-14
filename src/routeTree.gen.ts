@@ -23,10 +23,12 @@ import { Route as BecomeASupplierRouteImport } from './routes/become-a-supplier'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SupplierIndexRouteImport } from './routes/supplier.index'
+import { Route as NurseriesIndexRouteImport } from './routes/nurseries.index'
 import { Route as BrowseHerbsIndexRouteImport } from './routes/browse-herbs.index'
 import { Route as SupplierProfileRouteImport } from './routes/supplier.profile'
 import { Route as SupplierHerbsRouteImport } from './routes/supplier.herbs'
 import { Route as SupplierBookingsRouteImport } from './routes/supplier.bookings'
+import { Route as NurseriesIdRouteImport } from './routes/nurseries.$id'
 import { Route as BrowseHerbsSlugRouteImport } from './routes/browse-herbs.$slug'
 
 const SupplierRoute = SupplierRouteImport.update({
@@ -99,6 +101,11 @@ const SupplierIndexRoute = SupplierIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SupplierRoute,
 } as any)
+const NurseriesIndexRoute = NurseriesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NurseriesRoute,
+} as any)
 const BrowseHerbsIndexRoute = BrowseHerbsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -119,6 +126,11 @@ const SupplierBookingsRoute = SupplierBookingsRouteImport.update({
   path: '/bookings',
   getParentRoute: () => SupplierRoute,
 } as any)
+const NurseriesIdRoute = NurseriesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => NurseriesRoute,
+} as any)
 const BrowseHerbsSlugRoute = BrowseHerbsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -133,17 +145,19 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
-  '/nurseries': typeof NurseriesRoute
+  '/nurseries': typeof NurseriesRouteWithChildren
   '/plant-care': typeof PlantCareRoute
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/supplier': typeof SupplierRouteWithChildren
   '/browse-herbs/$slug': typeof BrowseHerbsSlugRoute
+  '/nurseries/$id': typeof NurseriesIdRoute
   '/supplier/bookings': typeof SupplierBookingsRoute
   '/supplier/herbs': typeof SupplierHerbsRoute
   '/supplier/profile': typeof SupplierProfileRoute
   '/browse-herbs/': typeof BrowseHerbsIndexRoute
+  '/nurseries/': typeof NurseriesIndexRoute
   '/supplier/': typeof SupplierIndexRoute
 }
 export interface FileRoutesByTo {
@@ -153,16 +167,17 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
-  '/nurseries': typeof NurseriesRoute
   '/plant-care': typeof PlantCareRoute
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/browse-herbs/$slug': typeof BrowseHerbsSlugRoute
+  '/nurseries/$id': typeof NurseriesIdRoute
   '/supplier/bookings': typeof SupplierBookingsRoute
   '/supplier/herbs': typeof SupplierHerbsRoute
   '/supplier/profile': typeof SupplierProfileRoute
   '/browse-herbs': typeof BrowseHerbsIndexRoute
+  '/nurseries': typeof NurseriesIndexRoute
   '/supplier': typeof SupplierIndexRoute
 }
 export interface FileRoutesById {
@@ -174,17 +189,19 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/faqs': typeof FaqsRoute
   '/login': typeof LoginRoute
-  '/nurseries': typeof NurseriesRoute
+  '/nurseries': typeof NurseriesRouteWithChildren
   '/plant-care': typeof PlantCareRoute
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/supplier': typeof SupplierRouteWithChildren
   '/browse-herbs/$slug': typeof BrowseHerbsSlugRoute
+  '/nurseries/$id': typeof NurseriesIdRoute
   '/supplier/bookings': typeof SupplierBookingsRoute
   '/supplier/herbs': typeof SupplierHerbsRoute
   '/supplier/profile': typeof SupplierProfileRoute
   '/browse-herbs/': typeof BrowseHerbsIndexRoute
+  '/nurseries/': typeof NurseriesIndexRoute
   '/supplier/': typeof SupplierIndexRoute
 }
 export interface FileRouteTypes {
@@ -204,10 +221,12 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/supplier'
     | '/browse-herbs/$slug'
+    | '/nurseries/$id'
     | '/supplier/bookings'
     | '/supplier/herbs'
     | '/supplier/profile'
     | '/browse-herbs/'
+    | '/nurseries/'
     | '/supplier/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -217,16 +236,17 @@ export interface FileRouteTypes {
     | '/contact'
     | '/faqs'
     | '/login'
-    | '/nurseries'
     | '/plant-care'
     | '/privacy'
     | '/signup'
     | '/sitemap.xml'
     | '/browse-herbs/$slug'
+    | '/nurseries/$id'
     | '/supplier/bookings'
     | '/supplier/herbs'
     | '/supplier/profile'
     | '/browse-herbs'
+    | '/nurseries'
     | '/supplier'
   id:
     | '__root__'
@@ -244,10 +264,12 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/supplier'
     | '/browse-herbs/$slug'
+    | '/nurseries/$id'
     | '/supplier/bookings'
     | '/supplier/herbs'
     | '/supplier/profile'
     | '/browse-herbs/'
+    | '/nurseries/'
     | '/supplier/'
   fileRoutesById: FileRoutesById
 }
@@ -259,7 +281,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   FaqsRoute: typeof FaqsRoute
   LoginRoute: typeof LoginRoute
-  NurseriesRoute: typeof NurseriesRoute
+  NurseriesRoute: typeof NurseriesRouteWithChildren
   PlantCareRoute: typeof PlantCareRoute
   PrivacyRoute: typeof PrivacyRoute
   SignupRoute: typeof SignupRoute
@@ -367,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierIndexRouteImport
       parentRoute: typeof SupplierRoute
     }
+    '/nurseries/': {
+      id: '/nurseries/'
+      path: '/'
+      fullPath: '/nurseries/'
+      preLoaderRoute: typeof NurseriesIndexRouteImport
+      parentRoute: typeof NurseriesRoute
+    }
     '/browse-herbs/': {
       id: '/browse-herbs/'
       path: '/'
@@ -395,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierBookingsRouteImport
       parentRoute: typeof SupplierRoute
     }
+    '/nurseries/$id': {
+      id: '/nurseries/$id'
+      path: '/$id'
+      fullPath: '/nurseries/$id'
+      preLoaderRoute: typeof NurseriesIdRouteImport
+      parentRoute: typeof NurseriesRoute
+    }
     '/browse-herbs/$slug': {
       id: '/browse-herbs/$slug'
       path: '/$slug'
@@ -417,6 +453,20 @@ const BrowseHerbsRouteChildren: BrowseHerbsRouteChildren = {
 
 const BrowseHerbsRouteWithChildren = BrowseHerbsRoute._addFileChildren(
   BrowseHerbsRouteChildren,
+)
+
+interface NurseriesRouteChildren {
+  NurseriesIdRoute: typeof NurseriesIdRoute
+  NurseriesIndexRoute: typeof NurseriesIndexRoute
+}
+
+const NurseriesRouteChildren: NurseriesRouteChildren = {
+  NurseriesIdRoute: NurseriesIdRoute,
+  NurseriesIndexRoute: NurseriesIndexRoute,
+}
+
+const NurseriesRouteWithChildren = NurseriesRoute._addFileChildren(
+  NurseriesRouteChildren,
 )
 
 interface SupplierRouteChildren {
@@ -445,7 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   FaqsRoute: FaqsRoute,
   LoginRoute: LoginRoute,
-  NurseriesRoute: NurseriesRoute,
+  NurseriesRoute: NurseriesRouteWithChildren,
   PlantCareRoute: PlantCareRoute,
   PrivacyRoute: PrivacyRoute,
   SignupRoute: SignupRoute,
@@ -455,13 +505,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

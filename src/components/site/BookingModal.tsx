@@ -6,16 +6,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { nurseries, type Herb } from "@/data/mock";
+import { nurseries, type Herb, getNursery } from "@/data/mock";
 import { CheckCircle2 } from "lucide-react";
 
 const SLOTS = ["09:00 AM","10:30 AM","12:00 PM","02:00 PM","04:30 PM","06:00 PM"];
 
 export function BookingModal({ herb, open, onOpenChange }: { herb: Herb; open: boolean; onOpenChange: (o: boolean) => void }) {
   const [submitted, setSubmitted] = useState(false);
+  const available = herb.nurseryIds
+    .map((id) => getNursery(id))
+    .filter((n): n is NonNullable<ReturnType<typeof getNursery>> => Boolean(n));
   const [form, setForm] = useState({
     name: "", phone: "", email: "",
-    nurseryId: herb.nurseryId,
+    nurseryId: herb.nurseryIds[0] ?? nurseries[0].id,
     date: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
     slot: SLOTS[0], notes: "",
   });
@@ -77,7 +80,7 @@ export function BookingModal({ herb, open, onOpenChange }: { herb: Herb; open: b
                 <Label>Nursery</Label>
                 <Select value={form.nurseryId} onValueChange={(v) => setForm({ ...form, nurseryId: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>{nurseries.map((n) => <SelectItem key={n.id} value={n.id}>{n.name} — {n.city}</SelectItem>)}</SelectContent>
+                  <SelectContent>{available.map((n) => <SelectItem key={n.id} value={n.id}>{n.name} — {n.city}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
