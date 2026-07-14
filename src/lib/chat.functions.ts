@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { GoogleGenAI } from "@google/genai";
 
 const MessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -62,35 +63,38 @@ Always ground answers in this knowledge. If unsure, use the fallback line above.
 export const chatWithBloom = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("Missing LOVABLE_API_KEY");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("Missing GEMINI_API_KEY");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Lovable-API-Key": apiKey,
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-5.4-mini",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...data.messages,
-        ],
-      }),
+    const ai = new GoogleGenAI({
+      apiKey,
     });
+    const prompt = `${SYSTEM_PROMPT}
 
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      if (res.status === 429) {
-        return { reply: "I'm getting a lot of questions right now — please try again in a moment." };
-      }
-      if (res.status === 402) {
-        return { reply: "Bloom is temporarily unavailable. Please contact the KitchenBloom team." };
-      }
-      throw new Error(`AI gateway ${res.status}: ${text.slice(0, 200)}`);
+Conversation:
+${data.messages
+        .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+        .join("\n")}
+
+ASSISTANT:`;
+
+    try {
+      const result = await ai.models.generateContent({
+        model: "gemini-flash-latest",
+        contents: prompt,
+      });
+
+      const reply =
+        result.text?.trim() ??
+        "I'm sorry, I don't have information about that yet. Please contact the KitchenBloom team.";
+
+      return { reply };
+    } catch (error) {
+      console.error(error);
+
+      return {
+        reply:
+          "I'm having trouble answering right now. Please try again in a moment.",
+      };
     }
-    const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-    const reply = json.choices?.[0]?.message?.content?.trim();
-    return { reply: reply || "I'm sorry, I don't have information about that yet. Please contact the KitchenBloom team." };
   });
