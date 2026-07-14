@@ -44,7 +44,7 @@ export async function fetchSupplierByUserId(userId: string): Promise<Supplier | 
 }
 
 export async function fetchHerbsBySupplier(supplierId: string): Promise<Herb[]> {
-  const { data, error } = await supabase.from("herbs").select("*").eq("supplier_id", supplierId).order("created_at", { ascending: false });
+  const { data, error } = await supabase.from("herbs").select("*").eq("supplier_id", supplierId).order("created_at", { ascending: true });
   if (error) throw error;
   return (data ?? []).map(mapHerb);
 }
