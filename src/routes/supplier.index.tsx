@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Leaf, CalendarCheck, Clock, Package } from "lucide-react";
-import { bookings, herbs } from "@/data/mock";
+import { bookings, herbs, nurseries } from "@/data/mock";
 
 export const Route = createFileRoute("/supplier/")({
   component: Dashboard,
@@ -9,10 +9,10 @@ export const Route = createFileRoute("/supplier/")({
 function Dashboard() {
   const today = new Date().toISOString().slice(0, 10);
   const stats = [
-    { icon: Leaf, label: "Total herbs", value: herbs.length },
-    { icon: CalendarCheck, label: "Today's bookings", value: bookings.filter((b) => b.date === today).length },
-    { icon: Clock, label: "Upcoming pickups", value: bookings.filter((b) => b.date >= today && b.status !== "Cancelled").length },
-    { icon: Package, label: "Inventory in stock", value: herbs.filter((h) => h.availability === "In stock").length },
+    { icon: Leaf, label: "Plant catalogue", value: herbs.length },
+    { icon: CalendarCheck, label: "Today's appointments", value: bookings.filter((b) => b.date === today).length },
+    { icon: Clock, label: "Upcoming visits", value: bookings.filter((b) => b.date >= today && b.status !== "Cancelled").length },
+    { icon: Package, label: "Verified partners", value: nurseries.length },
   ];
   const upcoming = bookings.filter((b) => b.date >= today).slice(0, 6);
   return (

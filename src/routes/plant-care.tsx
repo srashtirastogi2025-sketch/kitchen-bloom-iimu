@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Droplet, Sun, Scissors, Sprout } from "lucide-react";
+import { Droplet, Sun, Sprout } from "lucide-react";
 import { herbs } from "@/data/mock";
 
 export const Route = createFileRoute("/plant-care")({
@@ -35,8 +35,7 @@ function PlantCare() {
               <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2"><Sun className="h-4 w-4 text-primary" /> {h.care.sunlight}</li>
                 <li className="flex items-center gap-2"><Droplet className="h-4 w-4 text-primary" /> {h.care.watering}</li>
-                <li className="flex items-center gap-2"><Scissors className="h-4 w-4 text-primary" /> Harvest in {h.care.harvest}</li>
-                <li className="flex items-center gap-2"><Sprout className="h-4 w-4 text-primary" /> {h.care.timeline}</li>
+                <li className="flex items-center gap-2"><Sprout className="h-4 w-4 text-primary" /> Difficulty: {h.care.difficulty}</li>
               </ul>
             </div>
           </Link>
